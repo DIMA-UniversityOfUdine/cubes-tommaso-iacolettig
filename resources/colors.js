@@ -1,5 +1,6 @@
 function col(name, index) {
 	var colors = {
+        "blue": [0x3498db],
         "brown": [0x201010],
         "green": [0x1e770e, 0x144f09],
         "grey": [0xc1c1b0, 0x262121]
