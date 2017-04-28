@@ -3,7 +3,8 @@
 ## 27 aprile 2017
 
 - Ricerca online di heightmap free e selezione della seguente
-![heightmap](/textures/heightmap.png
+
+![heightmap](/textures/heightmap_128.png)
 
 - Riorganizzazione di file e cartelle.
 - Aggiunta della libreria dat.gui per gestire l'interazione con l'utente.
