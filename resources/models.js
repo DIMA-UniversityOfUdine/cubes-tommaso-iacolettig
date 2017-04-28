@@ -14,7 +14,7 @@ function drawTerrain(resolution, maxRes) {
         var terrain = new THREE.Group();
 
         var geometry = new THREE.BoxGeometry(size, size, size); // Same geometry for ground and water
-        var waterMaterial = new THREE.MeshPhongMaterial( {color: 0x3498db, transparent: true, opacity: waterOpacity} );
+        var waterMaterial = new THREE.MeshPhongMaterial( {color: col("blue", 0), transparent: true, opacity: waterOpacity} );
 
         for(var i = 0; i < data.length; i++) {
             var height = data[i];
