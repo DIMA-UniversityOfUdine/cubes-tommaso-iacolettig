@@ -5,7 +5,7 @@
 		<meta charset="utf-8">
 
 		<title>Iacolettig Project - 2017</title>
-		<meta name="description" content="Progetto Three.js - Interactive 3D Graphics (Uniud)">
+		<meta name="description" content="Three.js Project - Interactive 3D Graphics (Uniud)">
 		<meta name="author" content="Tommaso Iacolettig">
 
 		<style>
@@ -86,8 +86,8 @@
 			document.body.appendChild(stats.domElement);
 			
 			// Orbit controls
-			//controls = new THREE.OrbitControls(camera);
-			//controls.addEventListener('change', render);
+			controls = new THREE.OrbitControls(camera);
+			controls.addEventListener('change', render);
 
 			// Objects
 			main = new THREE.Group();
@@ -99,11 +99,16 @@
 			main.add(terrain);
 
 			// Lava
-			var lavaGeometry = new THREE.CylinderGeometry(0.6, 0.6, 1, 32);
-			var lavaMaterial = new THREE.MeshPhongMaterial( {color: 0xc0392b} );
+			var lavaGeometry = new THREE.CylinderGeometry(0.7, 0.7, 1, 32);
+			var lavaMaterial = new THREE.MeshStandardMaterial( {emissive: col("red", 0), emissiveIntensity: 1, color: col("red", 0)});
 			var lava = new THREE.Mesh(lavaGeometry, lavaMaterial);
-			lava.position.set(0, 1.6, 0);
+			lava.position.set(-0.2, 1.55, 0);
 			main.add(lava);
+
+			// Lava Light
+			var lavaLight = new THREE.PointLight(col("red", 0), 7, 4, 2);
+			lavaLight.position.set(-0.2, 2, 0);
+			main.add(lavaLight);
 
 			// Main
 			scene.add(main);
@@ -114,7 +119,7 @@
 
 			main.rotation.y = parameters.angle;
 
-			//controls.update();  
+			controls.update();  
 			stats.update();
 			render();
 		}
