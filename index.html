@@ -45,6 +45,9 @@
 			angle: Math.PI,
 			resolution: res[1]
 		}
+
+		var smoke = new THREE.Group();
+		var smokeParticles = new Array();
 		
 		function init() {
 			scene = new THREE.Scene();
@@ -110,14 +113,45 @@
 			lavaLight.position.set(-0.2, 2, 0);
 			main.add(lavaLight);
 
+			// Smoke
+			var smokeInterval = setInterval(smokeSpawn, 1000);
+			main.add(smoke);
+
 			// Main
 			scene.add(main);
+		}
+
+		function smokeSpawn() {
+			var x = -0.2 + Math.random() - 0.5;
+			var z = Math.random() - 0.5;
+			var s = 0.1 + (Math.random() - 0.5) / 10;
+		    smokeParticles.push(new SmokeParticle(x, 2, z, 0.1));
 		}
 		
 		function update() {
 			requestAnimationFrame(update);
 
+			// Main rotation
 			main.rotation.y = parameters.angle;
+
+			// Smoke animation
+			for(var i = 0; i < smoke.children.length; i++) {
+				smoke.remove(smoke.children[i]);
+			}
+
+			for(var i = 0; i < smokeParticles.length; i++) {
+				smokeParticles[i].update();
+				smoke.add(smokeParticles[i].draw());
+			}
+
+			for(var i = 0; i < smokeParticles.length; i++) {
+				if(!smokeParticles[i].check()) {
+					smokeParticles.splice(i, 1);
+					i--;
+				}
+			}
+
+			console.log(smokeParticles.length);
 
 			controls.update();  
 			stats.update();
