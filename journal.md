@@ -2,7 +2,9 @@
 
 ## 27 aprile 2017
 
-- Ricerca online di heightmap free e selezione della seguente
+- Ricerca online di heightmap free.
+- Selezione di quella riportata all'indirizzo http://depthfields.com/downloads/crater-2-2/.
+- Modifiche alla heightmap (inversione dei colori e scalatura) per ottenere tre risoluzioni diverse (128x128, 64x64, 32x32).
 
 ![heightmap](/textures/heightmap_128.png)
 
@@ -18,3 +20,9 @@
 - Creazione del pannello di controllo per l'interazione con l'utente (ancora da gestire il corretto caricamento in tempo reale delle heightmap a diversa risoluzione).
 - Creazione di colors.js per gestire in un file separato i colori.
 - Riorganizzazione del codice per renderlo meno ridondante.
+
+## 29 aprile 2017
+
+- Modifiche minori a color.js (aggiunta del giallo e di un terzo verde)
+- Creazione di una nuova funziona per disegnare un albero.
+- Aggiunta degli alberi alla scena in modo casuale.
