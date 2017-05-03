@@ -300,3 +300,48 @@ function drawAirplane() {
 
     return airplane;
 }
+
+function drawText() {
+    var textGroup = new THREE.Group();
+    var fontLoader = new THREE.FontLoader();
+
+    fontLoader.load('fonts/helvetiker_bold.typeface.json', function(font) {
+        var myUpperText = "IACO's";
+        var myLowerText = "VOLCANO";
+
+        var textMaterial = new THREE.MeshPhongMaterial( {color: col("grey", 0)} );
+
+        // Lower text
+        var lowerTextGeometry = new THREE.TextGeometry(myLowerText, {
+            font: font,
+            size: 0.34,
+            height: .3,
+            curveSegments: 10
+        });
+
+        lowerTextGeometry.computeBoundingBox();
+        var lowerText = new THREE.Mesh(lowerTextGeometry, textMaterial);
+        lowerText.castShadow = true;
+        lowerText.receiveShadow = true;
+        lowerText.position.x = -(lowerTextGeometry.boundingBox.max.x - lowerTextGeometry.boundingBox.min.x) / 2;
+        textGroup.add(lowerText);
+
+        // Upper text
+        var upperTextGeometry = new THREE.TextGeometry(myUpperText, {
+            font: font,
+            size: 0.5,
+            height: .3,
+            curveSegments: 10
+        });
+
+        upperTextGeometry.computeBoundingBox();
+        var upperText = new THREE.Mesh(upperTextGeometry, textMaterial);
+        upperText.castShadow = true;
+        upperText.receiveShadow = true;
+        upperText.position.x = -(upperTextGeometry.boundingBox.max.x - upperTextGeometry.boundingBox.min.x) / 2;
+        upperText.position.y = 5 / 4 *(lowerTextGeometry.boundingBox.max.y - lowerTextGeometry.boundingBox.min.y);
+        textGroup.add(upperText);
+    });
+
+    return textGroup;
+}
