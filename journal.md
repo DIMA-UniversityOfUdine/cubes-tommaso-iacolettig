@@ -44,3 +44,4 @@
 
 - Creazione di altri due modelli per gli alberi.
 - Modifiche minori a color.js (aggiunta di altri due verdi).
+- Creazione del testo 3D
