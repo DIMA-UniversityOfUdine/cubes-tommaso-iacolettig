@@ -83,12 +83,40 @@ function drawTree() {
     trunk.position.set(0, trunkGeometry.parameters.height / 2, 0);
 
     // Foliage
-    var foliageGeometry = new THREE.BoxGeometry(1, 1, 1);
-    var foliageMaterial = new THREE.MeshPhongMaterial( {color: col("green", 2)} );
-    var foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
-    foliage.castShadow = true;
-    foliage.receiveShadow = true;
-    foliage.position.set(0, trunkGeometry.parameters.height + foliageGeometry.parameters.height / 2, 0);
+    var randomNumber = Math.floor(Math.random() * 3);
+
+    switch(randomNumber) {
+        case 0:
+            var foliageGeometry = new THREE.BoxGeometry(1, 1, 1);
+            var foliageMaterial = new THREE.MeshPhongMaterial( {color: col("green", 2)} );
+            var foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
+            foliage.castShadow = true;
+            foliage.receiveShadow = true;
+            foliage.position.set(0, trunkGeometry.parameters.height + foliageGeometry.parameters.height / 2, 0);
+            break;
+        case 1:
+            var foliageGeometry = new THREE.BoxGeometry(0.8, 2, 0.8);
+            var foliageMaterial = new THREE.MeshPhongMaterial( {color: col("green", 3)} );
+            var foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
+            foliage.castShadow = true;
+            foliage.receiveShadow = true;
+            foliage.position.set(0, trunkGeometry.parameters.height + foliageGeometry.parameters.height / 2, 0);
+            break;
+        case 2:
+            var foliage = new THREE.Group();
+            var foliageMaterial = new THREE.MeshPhongMaterial( {color: col("green", 4)} );
+
+            for(var i = 0; i < 6; i++) {
+                var foliageGeometry = new THREE.BoxGeometry(1 - i * 0.15, 0.25, 1 - i * 0.15);
+                var foliageLevel = new THREE.Mesh(foliageGeometry, foliageMaterial);
+                foliageLevel.castShadow = true;
+                foliageLevel.receiveShadow = true;
+                foliageLevel.position.set(0, trunkGeometry.parameters.height / 2 + i * foliageGeometry.parameters.height, 0);
+                foliage.add(foliageLevel);
+            }
+            
+            break;
+    }
 
     // Tree
     var tree = new THREE.Group();
