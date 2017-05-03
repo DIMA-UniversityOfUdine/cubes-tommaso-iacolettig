@@ -129,7 +129,6 @@ class SmokeParticle {
         var smokeMaterial = new THREE.MeshPhongMaterial( {color: col("grey", 0), transparent: true, opacity: this.opacity} );
         var smoke = new THREE.Mesh(smokeGeometry, smokeMaterial);
         smoke.castShadow = true;
-        //smoke.receiveShadow = true;
         smoke.position.set(this.x, this.y, this.z);
 
         return smoke;
