@@ -110,6 +110,18 @@
 			lavaLight.position.set(-0.2, 2, 0);
 			main.add(lavaLight);
 
+			// Airplane
+			var airplane = drawAirplane();
+			airplane.name = "airplane";
+			airplane.scale.set(0.1, 0.1, 0.1);
+			airplane.rotation.z = Math.PI / 6;
+
+			var airplaneRotation = new THREE.Group();
+			airplaneRotation.name = "airplaneRotation";
+			airplaneRotation.add(airplane);
+
+			main.add(airplaneRotation);
+
 			// Main
 			scene.add(main);
 		}
@@ -118,6 +130,11 @@
 			requestAnimationFrame(update);
 
 			main.rotation.y = parameters.angle;
+
+			// Airplane animation
+			scene.getObjectByName("propeller", true).rotation.z += 1;
+			scene.getObjectByName("airplane", true).position.set(2, 3 + Math.sin(Date.now() / 1000) / 6, 0);
+			scene.getObjectByName("airplaneRotation", true).rotation.y += 0.06;
 
 			controls.update();  
 			stats.update();
