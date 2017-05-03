@@ -122,6 +122,13 @@
 
 			main.add(airplaneRotation);
 
+			// Text
+			var text = drawText();
+			text.scale.set(0.5, 0.5, 0.5);
+			text.rotation.set(Math.PI / 2, Math.PI, Math.PI / 4);
+			text.position.set(-2.8, 0.3, -2.8);
+			main.add(text);
+
 			// Main
 			scene.add(main);
 		}
