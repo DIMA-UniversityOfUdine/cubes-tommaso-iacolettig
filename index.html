@@ -45,6 +45,8 @@
 			angle: Math.PI,
 			resolution: res[1]
 		}
+
+		var waterArr = new Array();
 		
 		function init() {
 			scene = new THREE.Scene();
@@ -95,7 +97,7 @@
 			// Terrain
 			var resolution = parameters.resolution;
 			var maxRes = Math.max(...res);
-			var terrain = drawTerrain(resolution, maxRes);
+			var terrain = drawTerrain(resolution, maxRes, waterArr);
 			main.add(terrain);
 
 			// Lava
@@ -137,6 +139,15 @@
 			requestAnimationFrame(update);
 
 			main.rotation.y = parameters.angle;
+
+			// Water animation
+			var waterGroup = scene.getObjectByName("waterGroup", true);
+			waterGroup.children.length = 0;
+
+			for(var i = 0; i < waterArr.length; i++) {
+				waterArr[i].update();
+				waterGroup.add(waterArr[i].draw());
+			}
 
 			// Airplane animation
 			scene.getObjectByName("propeller", true).rotation.z += 1;
