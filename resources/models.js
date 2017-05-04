@@ -1,4 +1,4 @@
-function drawTerrain(resolution, maxRes) {
+function drawTerrain(resolution, maxRes, waterArr) {
     var terrain_scaleContainer = new THREE.Group();
 
     var img = new Image();
@@ -6,7 +6,7 @@ function drawTerrain(resolution, maxRes) {
 
     img.onload = function() {
         var size = 0.05; // Box size
-        var waterLevel = 8;
+        var waterLevel = 8.5;
         var waterOpacity = 0.5;
         var data = getHeightData(img, 0.3);
         var scaleXZ = maxRes / resolution; // Scale factor according to the resolution
@@ -14,6 +14,11 @@ function drawTerrain(resolution, maxRes) {
         var treeScale = 0.1;
 
         var terrain = new THREE.Group();
+        var groundGroup = new THREE.Group();
+        var waterGroup = new THREE.Group();
+        var treesGroup = new THREE.Group();
+
+        waterGroup.name = "waterGroup";
 
         var geometry = new THREE.BoxGeometry(size, size, size); // Same geometry for ground and water
         var waterMaterial = new THREE.MeshPhongMaterial( {color: col("blue", 0), transparent: true, opacity: waterOpacity} );
@@ -39,19 +44,18 @@ function drawTerrain(resolution, maxRes) {
             var groundMaterial = new THREE.MeshPhongMaterial( {color: c} );
             var ground = new THREE.Mesh(geometry, groundMaterial);
             ground.scale.y = height; // Box scaling along the y axis according to the height
-            ground.position.set(i % resolution * size, height * size / 2, i / resolution * size); // Box positioning (x and z according to the resolution, y according to the height)
+            ground.position.set(i % resolution * size, height * size / 2, Math.floor(i / resolution) * size); // Box positioning (x and z according to the resolution, y according to the height)
             ground.castShadow = true;
             ground.receiveShadow = true;
-            terrain.add(ground);
+            groundGroup.add(ground);
 
             // Water
-            var water = new THREE.Mesh(geometry, waterMaterial);
             var waterScale = Math.max(waterLevel - height, 0); // Water scale factor. If 0, the water is not shown
 
             if(waterScale > 0) {
-                water.scale.y = waterScale;
-                water.position.set(i % resolution * size, height * size + waterScale * size / 2, i / resolution * size); // Water positioning (similar to the previous one, the only difference is in the y value where I have to consider the water size as well)
-                terrain.add(water);
+                var water = new WaterComponent(geometry, waterMaterial, waterScale, i, resolution, height);
+                waterArr.push(water);
+                waterGroup.add(water.draw());
             }
 
             // Trees
@@ -59,11 +63,15 @@ function drawTerrain(resolution, maxRes) {
                 if(Math.random() < treeProbability) {
                     var tree = drawTree();
                     tree.scale.set(treeScale / scaleXZ, treeScale, treeScale / scaleXZ); // Tree XZ-scaling is necessary to counteract the terrain one
-                    tree.position.set(i % resolution * size, height * size, i / resolution * size);
-                    terrain.add(tree);
+                    tree.position.set(i % resolution * size, height * size, Math.floor(i / resolution) * size);
+                    treesGroup.add(tree);
                 }
             }
         }
+
+        terrain.add(groundGroup);
+        terrain.add(waterGroup);
+        terrain.add(treesGroup);
 
         terrain.position.set(-resolution * size / 2, 0, -resolution * size / 2); // Terrain centering
         terrain_scaleContainer.add(terrain);
@@ -71,6 +79,37 @@ function drawTerrain(resolution, maxRes) {
     }
 
     return terrain_scaleContainer;
+}
+
+class WaterComponent {
+    constructor(waterGeometry, waterMaterial, waterScale, index, resolution, height) {
+        this.waterGeometry = waterGeometry;
+        this.waterMaterial = waterMaterial;
+        this.waterScale = waterScale;
+        this.index = index;
+        this.resolution = resolution;
+        this.height = height;
+
+        this.angle = Math.floor(this.index / this.resolution) * 8 * Math.PI / (this.resolution - 1);
+        this.delta = (Math.sin(this.angle) - 1) / 3;
+    }
+
+    update() {
+        this.angle += 0.1;
+        this.delta = (Math.sin(this.angle) - 1) / 3;
+    }
+
+    draw() {
+        var water = new THREE.Mesh(this.waterGeometry, this.waterMaterial);
+        water.scale.y = this.waterScale + this.delta;
+
+        // Water positioning (x and z according to the resolution, y according to the height, the water size and delta as well)
+        water.position.x = this.index % this.resolution * this.waterGeometry.parameters.width;
+        water.position.y = this.height * this.waterGeometry.parameters.width + (this.waterScale + this.delta) * this.waterGeometry.parameters.width / 2;
+        water.position.z = Math.floor(this.index / this.resolution) * this.waterGeometry.parameters.width;
+
+        return water;
+    }
 }
 
 function drawTree() {
