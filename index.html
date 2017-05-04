@@ -115,7 +115,7 @@
 			main.add(lavaLight);
 
 			// Smoke
-			var smokeInterval = setInterval(smokeSpawn, 1000);
+			var smokeInterval = setInterval(smokeSpawn, 400);
 			main.add(smoke);
 
 			// Main
@@ -126,7 +126,7 @@
 			var x = -0.2 + Math.random() - 0.5;
 			var z = Math.random() - 0.5;
 			var s = 0.1 + (Math.random() - 0.5) / 10;
-		    smokeBuffer.push(new SmokeParticle(x, 2, z, 0.1));
+		    smokeBuffer.push(new SmokeParticle(x, 1.8, z, 0.2));
 		}
 		
 		function update() {
@@ -136,9 +136,7 @@
 			main.rotation.y = parameters.angle;
 
 			// Smoke animation
-			for(var i = 0; i < smoke.children.length; i++) {
-				smoke.remove(smoke.children[i]);
-			}
+			smoke.children.length = 0;
 
 			for(var i = 0; i < smokeBuffer.length; i++) {
 				smokeParticles.push(smokeBuffer[i]);

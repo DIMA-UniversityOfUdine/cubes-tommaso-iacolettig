@@ -103,18 +103,18 @@ class SmokeParticle {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.size = size;
+        this.size = size + Math.sin(Math.random() * 2 * Math.PI) * 0.05;
 
-        this.opacity = 0.5;
-        this.o = (Math.floor(Math.random() * 10) + 1) / 1000;
+        this.opacity = 0.8;
+        this.opacityDiff = (Math.floor(Math.random() * 6) + 5) / 1500;
     }
 
     update() {
         this.y += 0.01;
-        this.size += 0.001;
+        this.size += 0.002;
 
         if(this.check()) {
-            this.opacity -= this.o;
+            this.opacity -= this.opacityDiff;
         } else {
             this.opacity = 0;
         }
