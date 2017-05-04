@@ -89,6 +89,10 @@
 			
 			// Orbit controls
 			controls = new THREE.OrbitControls(camera);
+			controls.minDistance = 4;
+			controls.maxDistance = 12;
+			controls.maxPolarAngle = Math.PI / 2;
+			controls.enableDamping = true;
 			controls.addEventListener('change', render);
 
 			// Objects
@@ -138,6 +142,7 @@
 		function update() {
 			requestAnimationFrame(update);
 
+			// Main rotation
 			main.rotation.y = parameters.angle;
 
 			// Water animation
