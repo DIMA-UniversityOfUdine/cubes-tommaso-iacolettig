@@ -44,4 +44,10 @@
 
 - Creazione di altri due modelli per gli alberi.
 - Modifiche minori a color.js (aggiunta di altri due verdi).
-- Creazione del testo 3D
+- Creazione del testo 3D.
+
+## 4 maggio 2017
+
+- Animazione dell'acqua.
+- Correzione dei bug legati al fumo.
+- Miglioramenti relativi ai movimenti della telecamera.
