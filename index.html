@@ -152,6 +152,7 @@
 			for(var i = 0; i < smokeParticles.length; i++) {
 				if(!smokeParticles[i].check()) {
 					smokeParticles.splice(i, 1);
+					i--;
 				}
 			}
 
