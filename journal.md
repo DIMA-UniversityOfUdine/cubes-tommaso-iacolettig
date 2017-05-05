@@ -26,3 +26,28 @@
 - Modifiche minori a color.js (aggiunta del giallo e di un terzo verde)
 - Creazione di una nuova funziona per disegnare un albero.
 - Aggiunta degli alberi alla scena in modo casuale.
+- Test relativi al fumo (animazioni di cubi ed integrazione di un'ulteriore libreria).
+
+## 1 maggio 2017
+
+- Creazione del modello dell'aeroplano.
+- Animazione dell'aeroplano.
+- Ulteriori test sul fumo (presenza di bug).
+
+## 2 maggio 2017
+
+- Migliorie relative all'aeroplano.
+- Modifiche minori a color.js (aggiunta di un secondo rosso).
+- Ulteriori test sul fumo (presenza di bug).
+
+## 3 maggio 2017
+
+- Creazione di altri due modelli per gli alberi.
+- Modifiche minori a color.js (aggiunta di altri due verdi).
+- Creazione del testo 3D.
+
+## 4 maggio 2017
+
+- Animazione dell'acqua.
+- Correzione dei bug legati al fumo.
+- Miglioramenti relativi ai movimenti della telecamera.

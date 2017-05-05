@@ -49,6 +49,8 @@
 		var smoke = new THREE.Group();
 		var smokeParticles = new Array();
 		var smokeBuffer = new Array();
+
+		var waterArr = new Array();
 		
 		function init() {
 			scene = new THREE.Scene();
@@ -62,6 +64,8 @@
 			renderer.gammaOutput = true;
 			renderer.shadowMap.enabled = true;
 			document.body.appendChild(renderer.domElement);
+
+			window.addEventListener('resize', onWindowResize, false);
 			
 			// Camera position and orientation
 			camera.position.set(5, 5, 5);
@@ -91,6 +95,10 @@
 			
 			// Orbit controls
 			controls = new THREE.OrbitControls(camera);
+			controls.minDistance = 4;
+			controls.maxDistance = 12;
+			controls.maxPolarAngle = Math.PI / 2;
+			controls.enableDamping = true;
 			controls.addEventListener('change', render);
 
 			// Objects
@@ -99,7 +107,7 @@
 			// Terrain
 			var resolution = parameters.resolution;
 			var maxRes = Math.max(...res);
-			var terrain = drawTerrain(resolution, maxRes);
+			var terrain = drawTerrain(resolution, maxRes, waterArr);
 			main.add(terrain);
 
 			// Lava
@@ -117,6 +125,25 @@
 			// Smoke
 			var smokeInterval = setInterval(smokeSpawn, 400);
 			main.add(smoke);
+
+			// Airplane
+			var airplane = drawAirplane();
+			airplane.name = "airplane";
+			airplane.scale.set(0.1, 0.1, 0.1);
+			airplane.rotation.z = Math.PI / 6;
+
+			var airplaneRotation = new THREE.Group();
+			airplaneRotation.name = "airplaneRotation";
+			airplaneRotation.add(airplane);
+
+			main.add(airplaneRotation);
+
+			// Text
+			var text = drawText();
+			text.scale.set(0.5, 0.5, 0.5);
+			text.rotation.set(Math.PI / 2, Math.PI, Math.PI / 4);
+			text.position.set(-2.8, 0.3, -2.8);
+			main.add(text);
 
 			// Main
 			scene.add(main);
@@ -156,6 +183,20 @@
 				}
 			}
 
+			// Water animation
+			var waterGroup = scene.getObjectByName("waterGroup", true);
+			waterGroup.children.length = 0;
+
+			for(var i = 0; i < waterArr.length; i++) {
+				waterArr[i].update();
+				waterGroup.add(waterArr[i].draw());
+			}
+
+			// Airplane animation
+			scene.getObjectByName("propeller", true).rotation.z += 1;
+			scene.getObjectByName("airplane", true).position.set(2, 3 + Math.sin(Date.now() / 1000) / 6, 0);
+			scene.getObjectByName("airplaneRotation", true).rotation.y += 0.06;
+
 			controls.update();  
 			stats.update();
 			render();
@@ -190,6 +231,15 @@
 				.onChange(function(newVal) {
 					render()	
 				});
+		}
+
+		function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+
+			renderer.setSize(window.innerWidth, window.innerHeight);
+
+			render();
 		}
 		
 		init();
