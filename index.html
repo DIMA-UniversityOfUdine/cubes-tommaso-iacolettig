@@ -35,22 +35,44 @@
 
 	<body>
 		<script>
-		// Common vars
+		// Standard global variables
 		var scene, camera, renderer, controls, stats, gui;
 
-		// My vars
+		// Custom global variables
 		var main;
 		var res = [128, 64, 32];
-		var parameters = {
-			angle: Math.PI,
-			resolution: res[1]
-		}
 
 		var smoke = new THREE.Group();
 		var smokeParticles = new Array();
 		var smokeBuffer = new Array();
+		var smokeInterval;
 
 		var waterArr = new Array();
+
+		// Gui parameters
+		var parameters = {
+			angle: Math.PI,
+			resolution: res[1],
+
+			// Terrain
+			terrainRefresh: function() {
+				main.remove(main.getObjectByName("terrain", true));
+				waterArr.length = 0;
+				var resolution = parameters.resolution;
+				var maxRes = Math.max(...res);
+				var terrain = drawTerrain(resolution, maxRes, waterArr);
+				terrain.name = "terrain";
+				main.add(terrain);
+			},
+			waterAnimation: false,
+
+			// Smoke
+			showSmoke: false,
+
+			// Airplane
+			showAirplane: true,
+			airplaneSpeed: 0.06
+		}
 		
 		function init() {
 			scene = new THREE.Scene();
@@ -94,7 +116,7 @@
 			document.body.appendChild(stats.domElement);
 			
 			// Orbit controls
-			controls = new THREE.OrbitControls(camera);
+			controls = new THREE.OrbitControls(camera, renderer.domElement);
 			controls.minDistance = 4;
 			controls.maxDistance = 12;
 			controls.maxPolarAngle = Math.PI / 2;
@@ -108,6 +130,7 @@
 			var resolution = parameters.resolution;
 			var maxRes = Math.max(...res);
 			var terrain = drawTerrain(resolution, maxRes, waterArr);
+			terrain.name = "terrain";
 			main.add(terrain);
 
 			// Lava
@@ -123,7 +146,7 @@
 			main.add(lavaLight);
 
 			// Smoke
-			var smokeInterval = setInterval(smokeSpawn, 400);
+			//smokeInterval = setInterval(smokeSpawn, 400);
 			main.add(smoke);
 
 			// Airplane
@@ -162,6 +185,17 @@
 			// Main rotation
 			main.rotation.y = parameters.angle;
 
+			// Water animation
+			if(parameters.waterAnimation) {
+				var waterGroup = scene.getObjectByName("waterGroup", true);
+				waterGroup.children.length = 0;
+
+				for(var i = 0; i < waterArr.length; i++) {
+					waterArr[i].update();
+					waterGroup.add(waterArr[i].draw());
+				}
+			}
+
 			// Smoke animation
 			smoke.children.length = 0;
 
@@ -183,19 +217,10 @@
 				}
 			}
 
-			// Water animation
-			var waterGroup = scene.getObjectByName("waterGroup", true);
-			waterGroup.children.length = 0;
-
-			for(var i = 0; i < waterArr.length; i++) {
-				waterArr[i].update();
-				waterGroup.add(waterArr[i].draw());
-			}
-
 			// Airplane animation
 			scene.getObjectByName("propeller", true).rotation.z += 1;
 			scene.getObjectByName("airplane", true).position.set(2, 3 + Math.sin(Date.now() / 1000) / 6, 0);
-			scene.getObjectByName("airplaneRotation", true).rotation.y += 0.06;
+			scene.getObjectByName("airplaneRotation", true).rotation.y += parameters.airplaneSpeed;
 
 			controls.update();  
 			stats.update();
@@ -218,7 +243,7 @@
 		function buildGui() {
 			clearGui();
 
-			gui.add(parameters, 'angle')
+			/*gui.add(parameters, 'angle')
 				.name("Main rotation")
 				.min(0)
 				.max(2*Math.PI)
@@ -230,7 +255,33 @@
 				.name('Risoluzione')
 				.onChange(function(newVal) {
 					render()	
+				});*/
+
+			// Terrain
+			var terrainFolder = gui.addFolder("Terrain");
+			terrainFolder.add(parameters, 'terrainRefresh')
+				.name("Refresh");
+			terrainFolder.add(parameters, 'waterAnimation')
+				.name("Water animation")
+
+			// Smoke
+			var smokeFolder = gui.addFolder("Smoke");
+			smokeFolder.add(parameters, 'showSmoke')
+				.name("Show")
+				.onChange(function(value) {
+					if(value) {
+						smokeInterval = setInterval(smokeSpawn, 400);
+					} else {
+						clearInterval(smokeInterval);
+					}
 				});
+
+			// Airplane
+			var airplaneFolder = gui.addFolder("Airplane");
+			airplaneFolder.add(parameters, 'airplaneSpeed')
+				.name("Speed")
+				.min(0.03)
+				.max(0.09);
 		}
 
 		function onWindowResize() {
