@@ -165,6 +165,43 @@ function drawTree() {
     return tree;
 }
 
+class SmokeParticle {
+    constructor(x, y, z, size) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.size = size + Math.sin(Math.random() * 2 * Math.PI) * 0.05;
+
+        this.opacity = 0.8;
+        this.opacityDiff = (Math.floor(Math.random() * 6) + 5) / 1500;
+    }
+
+    update() {
+        this.y += 0.01;
+        this.size += 0.002;
+
+        if(this.check()) {
+            this.opacity -= this.opacityDiff;
+        } else {
+            this.opacity = 0;
+        }
+    }
+
+    check() {
+        return this.opacity > 0;
+    }
+
+    draw() {
+        var smokeGeometry = new THREE.BoxGeometry(this.size, this.size, this.size);
+        var smokeMaterial = new THREE.MeshPhongMaterial( {color: col("grey", 0), transparent: true, opacity: this.opacity} );
+        var smoke = new THREE.Mesh(smokeGeometry, smokeMaterial);
+        smoke.castShadow = true;
+        smoke.position.set(this.x, this.y, this.z);
+
+        return smoke;
+    }
+}
+
 function drawAirplane() {
     // Body
     var bodyGeometry = new THREE.BoxGeometry(1, 1, 3);

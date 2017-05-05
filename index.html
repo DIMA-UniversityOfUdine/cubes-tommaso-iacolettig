@@ -46,6 +46,10 @@
 			resolution: res[1]
 		}
 
+		var smoke = new THREE.Group();
+		var smokeParticles = new Array();
+		var smokeBuffer = new Array();
+
 		var waterArr = new Array();
 		
 		function init() {
@@ -118,6 +122,10 @@
 			lavaLight.position.set(-0.2, 2, 0);
 			main.add(lavaLight);
 
+			// Smoke
+			var smokeInterval = setInterval(smokeSpawn, 400);
+			main.add(smoke);
+
 			// Airplane
 			var airplane = drawAirplane();
 			airplane.name = "airplane";
@@ -140,12 +148,40 @@
 			// Main
 			scene.add(main);
 		}
+
+		function smokeSpawn() {
+			var x = -0.2 + Math.random() - 0.5;
+			var z = Math.random() - 0.5;
+			var s = 0.1 + (Math.random() - 0.5) / 10;
+		    smokeBuffer.push(new SmokeParticle(x, 1.8, z, 0.2));
+		}
 		
 		function update() {
 			requestAnimationFrame(update);
 
 			// Main rotation
 			main.rotation.y = parameters.angle;
+
+			// Smoke animation
+			smoke.children.length = 0;
+
+			for(var i = 0; i < smokeBuffer.length; i++) {
+				smokeParticles.push(smokeBuffer[i]);
+			}
+
+			smokeBuffer.length = 0;
+
+			for(var i = 0; i < smokeParticles.length; i++) {
+				smokeParticles[i].update();
+				smoke.add(smokeParticles[i].draw());
+			}
+
+			for(var i = 0; i < smokeParticles.length; i++) {
+				if(!smokeParticles[i].check()) {
+					smokeParticles.splice(i, 1);
+					i--;
+				}
+			}
 
 			// Water animation
 			var waterGroup = scene.getObjectByName("waterGroup", true);
