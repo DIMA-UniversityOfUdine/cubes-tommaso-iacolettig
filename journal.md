@@ -51,3 +51,7 @@
 - Animazione dell'acqua.
 - Correzione dei bug legati al fumo.
 - Miglioramenti relativi ai movimenti della telecamera.
+
+## 5 maggio 2017
+
+- Creazione dei controlli per poter interagire con la scena.
