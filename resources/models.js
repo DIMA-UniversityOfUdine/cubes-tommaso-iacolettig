@@ -1,16 +1,17 @@
-function drawTerrain(resolution, maxRes, waterArr) {
+function drawTerrain(resolution, maxRes, waterArray) {
     var terrain_scaleContainer = new THREE.Group();
 
     var img = new Image();
     img.src = "textures/heightmap_" + resolution + ".png";
 
     img.onload = function() {
+        var data = getHeightData(img, 0.3);
+
         var size = 0.05; // Box size
         var waterLevel = 8.5;
         var waterOpacity = 0.5;
-        var data = getHeightData(img, 0.3);
         var scaleXZ = maxRes / resolution; // Scale factor according to the resolution
-        var treeProbability = 1/20 * scaleXZ;
+        var treeProbability = 1/20 * scaleXZ; // Higher probability with fewer cubes
 
         var terrain = new THREE.Group();
         var groundGroup = new THREE.Group();
@@ -53,7 +54,7 @@ function drawTerrain(resolution, maxRes, waterArr) {
 
             if(waterScale > 0) {
                 var water = new WaterComponent(geometry, waterMaterial, waterScale, i, resolution, height);
-                waterArr.push(water);
+                waterArray.push(water);
                 waterGroup.add(water.draw());
             }
 
@@ -61,7 +62,7 @@ function drawTerrain(resolution, maxRes, waterArr) {
             if(c == col("green", 0) || c == col("green", 1)) { // Only if the ground color is green
                 if(Math.random() < treeProbability) {
                     var tree = drawTree();
-                    tree.scale.set(size, size * scaleXZ, size); // Tree XZ-scaling is necessary to counteract the terrain one
+                    tree.scale.set(size, size * scaleXZ, size); // Tree y-scaling is necessary to preserve the proportions (there will be terrain xz-scaling)
                     tree.position.set(i % resolution * size, height * size, Math.floor(i / resolution) * size);
                     treesGroup.add(tree);
                 }
@@ -89,13 +90,17 @@ class WaterComponent {
         this.resolution = resolution;
         this.height = height;
 
-        this.angle = Math.floor(this.index / this.resolution) * 8 * Math.PI / (this.resolution - 1);
-        this.delta = (Math.sin(this.angle) - 1) / 3;
+        this.angle = Math.floor(this.index / this.resolution) * 8 * Math.PI / (this.resolution - 1); // Angle for the sin function
+        this.delta = this.deltaFunction(this.angle); // Waves displacement value
     }
 
     update() {
         this.angle += 0.1;
-        this.delta = (Math.sin(this.angle) - 1) / 3;
+        this.delta = this.deltaFunction(this.angle);
+    }
+
+    deltaFunction(angle) {
+        return (Math.sin(angle) - 1) / 3;
     }
 
     draw() {
@@ -112,8 +117,10 @@ class WaterComponent {
 }
 
 function drawTree() {
+    var treeModels = 3;
+
     // Trunk
-    var trunkGeometry = new THREE.BoxGeometry(0.2, 1, 0.2);
+    var trunkGeometry = new THREE.BoxGeometry(0.2, 1, 0.2); // The same for every tree
     var trunkMaterial = new THREE.MeshPhongMaterial( {color: col("brown", 1)} );
     var trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
     trunk.castShadow = true;
@@ -121,7 +128,7 @@ function drawTree() {
     trunk.position.set(0, trunkGeometry.parameters.height / 2, 0);
 
     // Foliage
-    var randomNumber = Math.floor(Math.random() * 3);
+    var randomNumber = Math.floor(Math.random() * treeModels);
 
     switch(randomNumber) {
         case 0:
@@ -164,13 +171,12 @@ function drawTree() {
     return tree;
 }
 
-// AAA - Portare fuori geometry e material?
 class SmokeParticle {
     constructor(x, y, z, size) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.size = size + Math.sin(Math.random() * 2 * Math.PI) * 0.05;
+        this.size = size;
 
         this.opacity = 0.8;
         this.opacityDiff = (Math.floor(Math.random() * 6) + 5) / 1500;
@@ -303,7 +309,7 @@ function drawAirplane() {
     ailerons.add(aileron2);
 
     // Wheels structure
-    var wheels = new THREE.Group();
+    var wheelsStructure = new THREE.Group();
 
     // Supports
     var wheelsSupportGeometry = new THREE.BoxGeometry(0.1, 0.8, 0.6);
@@ -313,13 +319,13 @@ function drawAirplane() {
     wheelsSupport1.castShadow = true;
     wheelsSupport1.receiveShadow = true;
     wheelsSupport1.position.set(0.4, -bodyGeometry.parameters.height / 2 - wheelsSupportGeometry.parameters.height / 2, 0);
-    wheels.add(wheelsSupport1);
+    wheelsStructure.add(wheelsSupport1);
 
     var wheelsSupport2 = new THREE.Mesh(wheelsSupportGeometry, wheelsSupportMaterial);
     wheelsSupport2.castShadow = true;
     wheelsSupport2.receiveShadow = true;
     wheelsSupport2.position.set(-0.4, -bodyGeometry.parameters.height / 2 - wheelsSupportGeometry.parameters.height / 2, 0);
-    wheels.add(wheelsSupport2);
+    wheelsStructure.add(wheelsSupport2);
 
     // Bar
     var wheelsBarGeometry = new THREE.BoxGeometry(2, 0.1, 0.1);
@@ -328,7 +334,7 @@ function drawAirplane() {
     wheelsBar.castShadow = true;
     wheelsBar.receiveShadow = true;
     wheelsBar.position.set(0, -bodyGeometry.parameters.height / 2 - 4 / 5 * wheelsSupportGeometry.parameters.height, 0)
-    wheels.add(wheelsBar);
+    wheelsStructure.add(wheelsBar);
 
     // Wheels
     var wheelGeometry = new THREE.BoxGeometry(0.2, 0.5, 0.5);
@@ -338,13 +344,13 @@ function drawAirplane() {
     wheel1.castShadow = true;
     wheel1.receiveShadow = true;
     wheel1.position.set(4 / 5 * wheelsBarGeometry.parameters.width / 2, -bodyGeometry.parameters.height / 2 - 4 / 5 * wheelsSupportGeometry.parameters.height, 0)
-    wheels.add(wheel1);
+    wheelsStructure.add(wheel1);
 
     var wheel2 = new THREE.Mesh(wheelGeometry, wheelMaterial);
     wheel2.castShadow = true;
     wheel2.receiveShadow = true;
     wheel2.position.set(-4 / 5 * wheelsBarGeometry.parameters.width / 2, -bodyGeometry.parameters.height / 2 - 4 / 5 * wheelsSupportGeometry.parameters.height, 0)
-    wheels.add(wheel2);
+    wheelsStructure.add(wheel2);
 
     // Rims
     var rimGeometry = new THREE.BoxGeometry(0.25, 0.3, 0.3);
@@ -354,13 +360,13 @@ function drawAirplane() {
     rim1.castShadow = true;
     rim1.receiveShadow = true;
     rim1.position.set(4 / 5 * wheelsBarGeometry.parameters.width / 2, -bodyGeometry.parameters.height / 2 - 4 / 5 * wheelsSupportGeometry.parameters.height, 0)
-    wheels.add(rim1);
+    wheelsStructure.add(rim1);
 
     var rim2 = new THREE.Mesh(rimGeometry, rimMaterial);
     rim2.castShadow = true;
     rim2.receiveShadow = true;
     rim2.position.set(-4 / 5 * wheelsBarGeometry.parameters.width / 2, -bodyGeometry.parameters.height / 2 - 4 / 5 * wheelsSupportGeometry.parameters.height, 0)
-    wheels.add(rim2);
+    wheelsStructure.add(rim2);
 
     // Airplane
     var airplane = new THREE.Group();
@@ -372,7 +378,7 @@ function drawAirplane() {
     airplane.add(wingsSupports);
     airplane.add(tail);
     airplane.add(ailerons);
-    airplane.add(wheels);
+    airplane.add(wheelsStructure);
 
     return airplane;
 }
@@ -391,7 +397,7 @@ function drawText() {
         var lowerTextGeometry = new THREE.TextGeometry(myLowerText, {
             font: font,
             size: 0.34,
-            height: .3,
+            height: 0.3,
             curveSegments: 10
         });
 
@@ -406,7 +412,7 @@ function drawText() {
         var upperTextGeometry = new THREE.TextGeometry(myUpperText, {
             font: font,
             size: 0.5,
-            height: .3,
+            height: 0.3,
             curveSegments: 10
         });
 

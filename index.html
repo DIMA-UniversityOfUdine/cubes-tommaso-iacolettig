@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Iacolettig Project - 2017</title>
+		<title>Iacolettig Project 1 - 2017</title>
 		<meta name="description" content="Three.js Project - Interactive 3D Graphics (Uniud)">
 		<meta name="author" content="Tommaso Iacolettig">
 
@@ -24,7 +24,6 @@
 
 		<script src="lib/three.min.js"></script>
 		<script src="lib/stats.min.js"></script>
-		<script src="lib/Coordinates.js"></script>
 		<script src="lib/OrbitControls.js"></script>
 		<script src='lib/dat.gui.min.js'></script>
 
@@ -39,25 +38,24 @@
 		var scene, camera, renderer, controls, stats, gui;
 
 		// Custom global variables
-		var main;
-		var res = [128, 64, 32];
+		var main = new THREE.Group();
+		var res = [128, 64, 32]; // Possible resolutions
 
 		var smoke = new THREE.Group();
-		var smokeParticles = new Array();
-		var smokeBuffer = new Array();
+		var smokeArray = new Array();
 		var smokeInterval;
 
-		var waterArr = new Array();
+		var waterArray = new Array();
 
 		// Gui parameters
 		var parameters = {
 			// Terrain
 			terrainRefresh: function() {
 				main.remove(main.getObjectByName("terrain", true));
-				waterArr.length = 0;
+				waterArray.length = 0; // To avoid duplication
 				var resolution = parameters.resolution;
 				var maxRes = Math.max(...res);
-				var terrain = drawTerrain(resolution, maxRes, waterArr);
+				var terrain = drawTerrain(resolution, maxRes, waterArray);
 				terrain.name = "terrain";
 				main.add(terrain);
 			},
@@ -68,7 +66,6 @@
 			generateSmoke: false,
 
 			// Airplane
-			showAirplane: true,
 			airplaneSpeed: 0.06
 		}
 		
@@ -121,13 +118,11 @@
 			controls.enableDamping = true;
 			controls.addEventListener('change', render);
 
-			// Objects
-			main = new THREE.Group();
-
+			// -- OBJECTS --
 			// Terrain
 			var resolution = parameters.resolution;
 			var maxRes = Math.max(...res);
-			var terrain = drawTerrain(resolution, maxRes, waterArr);
+			var terrain = drawTerrain(resolution, maxRes, waterArray);
 			terrain.name = "terrain";
 			main.add(terrain);
 
@@ -144,7 +139,7 @@
 			main.add(lavaLight);
 
 			// Smoke
-			//smokeInterval = setInterval(smokeSpawn, 400);
+			//smokeInterval = setInterval(smokeSpawn, 400); // This is now controlled in the gui
 			main.add(smoke);
 
 			// Airplane
@@ -153,7 +148,7 @@
 			airplane.scale.set(0.1, 0.1, 0.1);
 			airplane.rotation.z = Math.PI / 6;
 
-			var airplaneRotation = new THREE.Group();
+			var airplaneRotation = new THREE.Group(); // For the rotation around the volcano
 			airplaneRotation.name = "airplaneRotation";
 			airplaneRotation.add(airplane);
 
@@ -170,13 +165,6 @@
 			main.rotation.y = Math.PI;
 			scene.add(main);
 		}
-
-		function smokeSpawn() {
-			var x = -0.2 + Math.random() - 0.5;
-			var z = Math.random() - 0.5;
-			var s = 0.1 + (Math.random() - 0.5) / 10;
-		    smokeBuffer.push(new SmokeParticle(x, 1.8, z, 0.2));
-		}
 		
 		function update() {
 			requestAnimationFrame(update);
@@ -184,31 +172,24 @@
 			// Water animation
 			if(parameters.waterAnimation) {
 				var waterGroup = scene.getObjectByName("waterGroup", true);
-				waterGroup.children.length = 0;
+				waterGroup.children.length = 0; // Remove all the children
 
-				for(var i = 0; i < waterArr.length; i++) {
-					waterArr[i].update();
-					waterGroup.add(waterArr[i].draw());
+				for(var i = 0; i < waterArray.length; i++) { // Update and re-add water
+					waterArray[i].update();
+					waterGroup.add(waterArray[i].draw());
 				}
 			}
 
 			// Smoke animation
-			smoke.children.length = 0;
+			smoke.children.length = 0; // Remove all the children
 
-			for(var i = 0; i < smokeBuffer.length; i++) {
-				smokeParticles.push(smokeBuffer[i]);
-			}
+			for(var i = 0; i < smokeArray.length; i++) {
+				smokeArray[i].update();
 
-			smokeBuffer.length = 0;
-
-			for(var i = 0; i < smokeParticles.length; i++) {
-				smokeParticles[i].update();
-				smoke.add(smokeParticles[i].draw());
-			}
-
-			for(var i = 0; i < smokeParticles.length; i++) {
-				if(!smokeParticles[i].check()) {
-					smokeParticles.splice(i, 1);
+				if(smokeArray[i].check()) { // If the particle is still visible
+					smoke.add(smokeArray[i].draw()); // Draw it
+				} else {
+					smokeArray.splice(i, 1); // Else remove it from the array
 					i--;
 				}
 			}
@@ -217,6 +198,7 @@
 			scene.getObjectByName("propeller", true).rotation.z += 1;
 			scene.getObjectByName("airplane", true).position.set(2, 3 + Math.sin(Date.now() / 1000) / 6, 0);
 			scene.getObjectByName("airplaneRotation", true).rotation.y += parameters.airplaneSpeed;
+
 
 			controls.update();  
 			stats.update();
@@ -275,6 +257,14 @@
 			renderer.setSize(window.innerWidth, window.innerHeight);
 
 			render();
+		}
+
+		function smokeSpawn() {
+			var x = -0.2 + Math.random() - 0.5;
+			var y = 1.8;
+			var z = Math.random() - 0.5;
+			var size = 0.1 + (Math.random() - 0.5) / 10;
+		    smokeArray.push(new SmokeParticle(x, y, z, size));
 		}
 		
 		init();
