@@ -11,7 +11,6 @@ function drawTerrain(resolution, maxRes, waterArr) {
         var data = getHeightData(img, 0.3);
         var scaleXZ = maxRes / resolution; // Scale factor according to the resolution
         var treeProbability = 1/20 * scaleXZ;
-        var treeScale = 0.1;
 
         var terrain = new THREE.Group();
         var groundGroup = new THREE.Group();
@@ -62,7 +61,7 @@ function drawTerrain(resolution, maxRes, waterArr) {
             if(c == col("green", 0) || c == col("green", 1)) { // Only if the ground color is green
                 if(Math.random() < treeProbability) {
                     var tree = drawTree();
-                    tree.scale.set(treeScale / scaleXZ, treeScale, treeScale / scaleXZ); // Tree XZ-scaling is necessary to counteract the terrain one
+                    tree.scale.set(size, size * scaleXZ, size); // Tree XZ-scaling is necessary to counteract the terrain one
                     tree.position.set(i % resolution * size, height * size, Math.floor(i / resolution) * size);
                     treesGroup.add(tree);
                 }
@@ -165,6 +164,7 @@ function drawTree() {
     return tree;
 }
 
+// AAA - Portare fuori geometry e material?
 class SmokeParticle {
     constructor(x, y, z, size) {
         this.x = x;
