@@ -51,9 +51,6 @@
 
 		// Gui parameters
 		var parameters = {
-			angle: Math.PI,
-			resolution: res[1],
-
 			// Terrain
 			terrainRefresh: function() {
 				main.remove(main.getObjectByName("terrain", true));
@@ -64,10 +61,11 @@
 				terrain.name = "terrain";
 				main.add(terrain);
 			},
+			resolution: res[1],
 			waterAnimation: false,
 
 			// Smoke
-			showSmoke: false,
+			generateSmoke: false,
 
 			// Airplane
 			showAirplane: true,
@@ -169,6 +167,7 @@
 			main.add(text);
 
 			// Main
+			main.rotation.y = Math.PI;
 			scene.add(main);
 		}
 
@@ -181,9 +180,6 @@
 		
 		function update() {
 			requestAnimationFrame(update);
-
-			// Main rotation
-			main.rotation.y = parameters.angle;
 
 			// Water animation
 			if(parameters.waterAnimation) {
@@ -243,31 +239,19 @@
 		function buildGui() {
 			clearGui();
 
-			/*gui.add(parameters, 'angle')
-				.name("Main rotation")
-				.min(0)
-				.max(2*Math.PI)
-				.onChange(function(newVal) {
-					render()	
-				});
-
-			gui.add(parameters, 'resolution', res)
-				.name('Risoluzione')
-				.onChange(function(newVal) {
-					render()	
-				});*/
-
 			// Terrain
 			var terrainFolder = gui.addFolder("Terrain");
 			terrainFolder.add(parameters, 'terrainRefresh')
 				.name("Refresh");
+			terrainFolder.add(parameters, 'resolution', res)
+				.name("Resolution");
 			terrainFolder.add(parameters, 'waterAnimation')
-				.name("Water animation")
+				.name("Water animation");
 
 			// Smoke
 			var smokeFolder = gui.addFolder("Smoke");
-			smokeFolder.add(parameters, 'showSmoke')
-				.name("Show")
+			smokeFolder.add(parameters, 'generateSmoke')
+				.name("Generate")
 				.onChange(function(value) {
 					if(value) {
 						smokeInterval = setInterval(smokeSpawn, 400);
