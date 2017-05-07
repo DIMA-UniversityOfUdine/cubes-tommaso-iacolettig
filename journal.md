@@ -55,3 +55,8 @@
 ## 5 maggio 2017
 
 - Creazione dei controlli per poter interagire con la scena.
+
+## 7 maggio 2017
+
+- Aggiunta di un select per cambiare la risoluzione.
+- Correzione di un bug relativo alla scalatura degli alberi per diverse risoluzioni.
