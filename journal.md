@@ -6,7 +6,9 @@
 - Selezione di quella riportata all'indirizzo http://depthfields.com/downloads/crater-2-2/.
 - Modifiche alla heightmap (inversione dei colori e scalatura) per ottenere tre risoluzioni diverse (128x128, 64x64, 32x32).
 
-![heightmap](/textures/heightmap_128.png)
+![heightmap 128x128](/textures/heightmap_128.png)
+![heightmap 64x64](/textures/heightmap_64.png)
+![heightmap 32x32](/textures/heightmap_32.png)
 
 - Riorganizzazione di file e cartelle.
 - Aggiunta della libreria dat.gui per gestire l'interazione con l'utente.
@@ -23,7 +25,7 @@
 
 ## 29 aprile 2017
 
-- Modifiche minori a color.js (aggiunta del giallo e di un terzo verde)
+- Modifiche minori a color.js (aggiunta del giallo e di un terzo verde).
 - Creazione di una nuova funziona per disegnare un albero.
 - Aggiunta degli alberi alla scena in modo casuale.
 - Test relativi al fumo (animazioni di cubi ed integrazione di un'ulteriore libreria).
@@ -60,3 +62,6 @@
 
 - Aggiunta di un select per cambiare la risoluzione.
 - Correzione di un bug relativo alla scalatura degli alberi per diverse risoluzioni.
+- Aggiunta di commenti.
+- Rimozione di codice inutile.
+- Ottimizzazione del codice.
