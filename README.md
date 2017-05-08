@@ -3,13 +3,31 @@
 ## Descrizione generale
 Il mio scopo era quello di creare un paesaggio a partire da una heightmap e di aggiungere qualche modello più complesso che completasse la scena: ho quindi realizzato un vulcano attorno al quale vola un aeroplano.
 
-> La heightmap originale è possibile trovarla al seguente indirizzo: http://depthfields.com/downloads/crater-2-2/.
+> È possibile trovare la heightmap originale al seguente indirizzo: http://depthfields.com/downloads/crater-2-2/.
 > Inizialmente ho invertito i colori di tale immagine per poi ottenere tre versioni di diversa risoluzione (128x128, 64x64 e 32x32).
 
-Il **vulcano** viene generato a partire dalla heightmap (modificata) e i diversi colori dei cubi vengono attribuiti in base al valore dell'altezza. Il passaggio di colore tra una zona e la successiva è graduale.
+Gli oggetti principali della scena sono:
+- Il **vulcano** viene generato a partire dalla heightmap (modificata) e i diversi colori dei cubi vengono attribuiti in base al valore dell'altezza. Il passaggio di colore tra una zona e la successiva è graduale.
+- L'**acqua** viene generata sopra a tutti quei cubi che sono situati al di sotto di una certa altezza.
+- Gli **alberi** vengono generati casualmente sopra il terreno di colore verde. Ho creto tre modelli differenti per ottenere maggiore varietà.
+- La **lava** è l'unico elemento cilindrico, forma più facile da gestire per una corretta visualizzazione all'interno del cratere.
+- Il **fumo** viene generato particella per particella ad intervalli regolari (se l'animazione è attiva).
+- L'**aeroplano** è il "modello complesso" della scena e vola attorno al vulcano ad un velocità regolabile.
+- Il **testo** riporta il titolo del progetto ed è stato inserito per testare l'utilizzo delle scritte 3D.
 
-L'**acqua** viene generata sopra a tutti quei cubi che sono situati al di sotto di una certe altezza.
-
+I file utilizzati sono i seguenti:
+- **index.html**: organizza la scena, le animazioni e l'interazione con l'utente.
+- **resources** (file personalizzati)
+  - **models.js**: definisce tutti i modelli 3D (funzioni e classi).
+  - **functions.js**: definisce funzioni "complesse" che possono essere utilizzate più volte nel resto del codice.
+  - **colors.js**: definisce i colori che vengono usati nella scena.
+- **lib** (librerie esterne)
+  - **three.min.js**
+  - **stats.min.js**: statistiche in tempo reale.
+  - **OrbitControls.js**: navigazione nella scena.
+  - **dat.gui.min.js**: interazione con l'utente.
+- **textures**: heightmap di diverse risoluzioni.
+- **fonts**: font usato per il testo 3D.
 
 ## Risultati
 
