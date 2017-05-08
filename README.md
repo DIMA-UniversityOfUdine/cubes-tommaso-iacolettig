@@ -1,5 +1,7 @@
 # Iaco's Volcano
 
+![Main view thumbnail](screenshots/screen_00.png)
+
 ## Descrizione generale
 Il mio scopo era quello di creare un paesaggio a partire da una heightmap e di aggiungere qualche modello più complesso che completasse la scena: ho quindi realizzato un vulcano attorno al quale vola un aeroplano.
 
