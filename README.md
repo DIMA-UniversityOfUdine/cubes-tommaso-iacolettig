@@ -2,11 +2,12 @@
 
 ![Main view thumbnail](screenshots/screen_00.png)
 
+**Attenzione!** Per un corretto funzionamento è necessario eseguire il file localmente. Ho sfruttato XAMPP per creare un server locale Apache. Consultare anche https://threejs.org/docs/index.html#manual/introduction/How-to-run-thing-locally per una panoramica più completa.
+
 ## Descrizione generale
 Il mio scopo era quello di creare un paesaggio a partire da una heightmap e di aggiungere qualche modello più complesso che completasse la scena: ho quindi realizzato un vulcano attorno al quale vola un aeroplano.
 
-> È possibile trovare la heightmap originale al seguente indirizzo: http://depthfields.com/downloads/crater-2-2/.
-> Inizialmente ho invertito i colori di tale immagine per poi ottenere tre versioni di diversa risoluzione (128x128, 64x64 e 32x32).
+*È possibile trovare la heightmap originale all'indirizzo http://depthfields.com/downloads/crater-2-2/. Inizialmente ho invertito i colori di tale immagine per poi ottenere tre versioni di diversa risoluzione (128x128, 64x64 e 32x32).*
 
 Gli oggetti principali della scena sono:
 - Il **vulcano** viene generato a partire dalla heightmap (modificata) e i diversi colori dei cubi vengono attribuiti in base al valore dell'altezza. Il passaggio di colore tra una zona e la successiva è graduale.
@@ -36,7 +37,15 @@ I file utilizzati sono i seguenti:
 ![Main view](screenshots/screen_01.png)
 ![Main view zoomed](screenshots/screen_02.png)
 
+Il codice è strutturato in modo tale da adattare gli elementi della scena in base alla risoluzione (della heightmap). Per tale motivo, una risoluzione di 128x128 permetterà di ottenere una scena più dettagliata rispetto a quella che si otterrebbe con una risoluzione di 32x32. D'altra parte, però, il numero di cubi è molto maggiore nel primo caso, peggiorando considerevolmente le prestazioni: considerando solamente i blocchi del terreno, questi sarebbero 16384 contro 1024 (16 volte maggiore).
+
+Ho iniziato a sviluppare il codice basandomi sulla heightmap 128x128. Per la prima fase, caratterizzata da una scena praticamente statica, mi è sembrata la scelta migliore. Introducendo nuovi oggetti ed animazioni, però, la situazione è cambiata: ora si può apprezzare maggiormente riducendo la risoluzione a 64x64 o 32x32; Con 128x128 il mio portatile è messo in seria difficoltà.
+
 ## Procedimento
+
+*AAA - da finire*
+
+-----------------------------------------------------------------------------------------------------------------
 
 # Modeling and rendering with cubes
 
