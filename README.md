@@ -7,6 +7,7 @@ Il mio scopo era quello di creare un paesaggio a partire da una heightmap e di a
 > Inizialmente ho invertito i colori di tale immagine per poi ottenere tre versioni di diversa risoluzione (128x128, 64x64 e 32x32).
 
 Il **vulcano** viene generato a partire dalla heightmap (modificata) e i diversi colori dei cubi vengono attribuiti in base al valore dell'altezza. Il passaggio di colore tra una zona e la successiva è graduale.
+
 L'**acqua** viene generata sopra a tutti quei cubi che sono situati al di sotto di una certe altezza.
 
 
