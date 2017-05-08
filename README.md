@@ -5,7 +5,7 @@
 **Attenzione!** Per un corretto funzionamento è necessario eseguire il file localmente. Ho sfruttato XAMPP per creare un server locale Apache. Consultare anche https://threejs.org/docs/index.html#manual/introduction/How-to-run-thing-locally per una panoramica più completa.
 
 ## Descrizione generale
-Il mio scopo era quello di creare un paesaggio a partire da una heightmap e di aggiungere qualche modello più complesso che completasse la scena: ho quindi realizzato un vulcano attorno al quale vola un aeroplano.
+Il mio scopo era quello di creare un paesaggio a partire da una heightmap, di aggiungere qualche modello più complesso che completasse la scena e di permettere all'utente di interagire con essa: ho quindi realizzato un vulcano attorno al quale vola un aeroplano, mentre l'utente può variare alcuni parametri o esegiure delle animazioni.
 
 *È possibile trovare la heightmap originale all'indirizzo http://depthfields.com/downloads/crater-2-2/. Inizialmente ho invertito i colori di tale immagine per poi ottenere tre versioni di diversa risoluzione (128x128, 64x64 e 32x32).*
 
