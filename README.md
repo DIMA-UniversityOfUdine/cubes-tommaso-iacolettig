@@ -5,6 +5,7 @@
 **Attenzione!** Per un corretto funzionamento è necessario eseguire il file localmente. Ho sfruttato XAMPP per creare un server locale Apache. Consultare anche https://threejs.org/docs/index.html#manual/introduction/How-to-run-thing-locally per una panoramica più completa.
 
 ## Descrizione generale
+
 Il mio scopo era quello di creare un paesaggio a partire da una heightmap, di aggiungere qualche modello più complesso che completasse la scena e di permettere all'utente di interagire con essa: ho quindi realizzato un vulcano attorno al quale vola un aeroplano, mentre l'utente può variare alcuni parametri o esegiure delle animazioni.
 
 *È possibile trovare la heightmap originale all'indirizzo http://depthfields.com/downloads/crater-2-2/. Inizialmente ho invertito i colori di tale immagine per poi ottenere tre versioni di diversa risoluzione (128x128, 64x64 e 32x32).*
@@ -43,7 +44,25 @@ Ho iniziato a sviluppare il codice basandomi sulla heightmap 128x128. Per la pri
 
 ## Procedimento
 
-*AAA - da finire*
+I passi che ho seguito per creare la scena sono i seguenti:
+- Ricerca di heightmap free che mi dessero qualche spunto interessante
+- Selezione della heightmap sopra indicata
+- Riorganizzazione del codice a partire da quello base
+- Creazione del vulcano (terra e acqua)
+- Aggiunta della lava e della sua luce
+- Creazione degli alberi
+- Aggiunta del fumo
+- Creazione dell'aeroplano
+- Aggiunta della scritta 3D
+- Animazioni ed integrazione dei comandi utente
+
+L'idea del vulcano mi è venuta semplicemente osservando la heightmap. Dopo aver realizzato la prima versione, ho deciso di mantenere questa strada.
+
+Elementi come acqua, alberi e fumo sono stati aggiunti per rendere la scena più interessante e completa.
+
+Acqua e fumo vengono gestiti mediante classi per semplificare la fase dell'animazione.
+
+Ho deciso di realizzare un aeroplano perché mi piaceva l'idea di aggiungere qualcosa che ruotasse attorno al vulcano e/o che volasse in cielo. Inoltre, non essendo a contatto con il terreno, non dovevo preoccuparmi di creare un modello che andasse bene per tutte le risoluzioni. L'ombra che viene proiettata sul vulcano risulta un effetto piacevole.
 
 -----------------------------------------------------------------------------------------------------------------
 
