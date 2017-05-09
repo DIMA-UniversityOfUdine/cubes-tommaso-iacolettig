@@ -65,3 +65,11 @@
 - Aggiunta di commenti.
 - Rimozione di codice inutile.
 - Ottimizzazione del codice.
+
+## 8 maggio 2017
+
+- Stesura della relazione.
+
+## 9 maggio 2017
+
+- Stesura della relazione.
